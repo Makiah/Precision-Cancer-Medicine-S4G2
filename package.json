@@ -1,14 +1,15 @@
 {
-  "name": “PrecisionCancerMedicine”,
+  "name": "PrecisionCancerMedicine",
   "version": "1.0.0",
   "main": "server.js",
-  "description" : "Precision Cancer Medicine Tool",
-  "repository" :
-  { "type" : "git"
-  , "url" : "https://github.com/Makiah/PrecisionCancerMedicine"
+  "description": "Precision Cancer Medicine Tool",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Makiah/PrecisionCancerMedicine"
   },
   "dependencies": {
     "body-parser": "~1.4.2",
-    "express": "~4.5.1"
+    "express": "~4.5.1",
+    "flash": "^1.1.0"
   }
 }
