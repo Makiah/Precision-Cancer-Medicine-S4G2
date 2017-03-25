@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <script src="https://rawgithub.com/smart-on-fhir/client-js/master/dist/fhir-client.js"></script>
+    <link rel="shortcut icon" href="">
+  </head>
+  <body>
+    <h1><span id="name"></span>, <span id="gender"></span> (MRN: <span id="mrn"></span>)</h1>
+    <ul id="condition-list"></ul>
+    <script type="text/javascript">
+
+        function getPatientName (pt) {
+            if (pt.name) {
+                var names = pt.name.map(function(name) {
+                    return name.given.join(" ") + " " + name.family.join(" ");
+                });
+                return names.join(" / ")
+            } else {
+                return "Anonymous";
+            }
+        }
+
+        function getPatientGender (pt) {
+        	if(pt.gender){
+        		var gender = pt.gender;
+        		return (gender.charAt(0).toUpperCase() + gender.slice(1));
+        	}
+        	else {
+        		return "Unknown";
+        	}
+        }
+
+        function setPatientMRN (pt) {
+        	if(pt.identifier) {
+        		
+        		pt.identifier.forEach(function(id) {
+        			id.type.coding.forEach(function(coding) {
+        				if(coding.code == "MR"){
+        					console.log(id.value);
+        					document.getElementById('mrn').innerHTML = id.value;
+        				} 
+        			});
+        		});
+        	}
+        }
+
+        function displayPatient (pt) {
+            document.getElementById('name').innerHTML = getPatientName(pt);
+            document.getElementById('gender').innerHTML = getPatientGender(pt);
+            document.getElementById('mrn').innerHTML = "Unknown"; //Default to Unknown, then call setPatientMRN. Different from other information because of searching required.
+            setPatientMRN(pt);
+        }
+
+        var conditionList = document.getElementById('condition-list');
+
+        function displayPatientCondition (conditionText) {
+        	conditionList.innerHTML += "<li> " + conditionText + "</li>";
+        }
+
+        FHIR.oauth2.ready(function(smart){
+        	console.log(smart);
+
+        	var encodedOpenID = smart.tokenResponse.id_token;
+
+            smart.patient.read().then(function(pt) {
+            	console.log(pt);
+                displayPatient(pt);
+                
+
+                smart.api.fetchAll({type: "Condition", query: {patient: {id: pt.id}}}).then(function(results, refs) {
+                	console.log(results);
+                	results.forEach(function(condition){
+                		displayPatientCondition(condition.code.text);
+                	});
+            	});
+
+            	smart.api.search({type: "Condition"}).then(function(results, refs) {
+                	console.log(results);
+            	});
+
+            });
+        });
+    </script>
+  </body>
+</html>

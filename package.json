@@ -1,0 +1,15 @@
+{
+  "name": "PCMT",
+  "version": "1.0.0",
+  "main": "server.js",
+  "description" : "Precision Cancer Medicine Tool",
+  "repository" :
+  { "type" : "git"
+  , "url" : "https://github.com/Makiah/PrecisionCancerMedicine"
+  },
+  "dependencies": {
+    "body-parser": "~1.4.2",
+    "express": "~4.5.1",
+    "method-override": "~2.0.2"
+  }
+}

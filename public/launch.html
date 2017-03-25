@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html>
+  	<head>
+    	<script src="https://rawgithub.com/smart-on-fhir/client-js/master/dist/fhir-client.js"></script>
+    	<link rel="shortcut icon" href="">
+    	<script>
+    		// Change this to the ID of the client that you registered with the SMART on FHIR authorization server.
+    		var clientId = "9c9d150c-78e3-438f-a061-ddd074425f3d";
+
+        	var redirectUri = "http://0.0.0.0:8080/index.html"
+
+      		FHIR.oauth2.authorize({
+        		"client_id": clientId,
+        		"redirect_uri": redirectUri,
+        		"scope":  "launch patient/*.* openid profile"
+      		});
+    	</script>
+  	</head>
+  	Loading...
+</html>
+
+        
+        
+        
+        
+
