@@ -2,7 +2,7 @@
 var express        = require('express');
 var app            = express();
 var bodyParser     = require('body-parser');
-var flash 		   = require('flash')
+var flash 		   = require('flash');
 //==================================================================
 
 // get all data/stuff of the body (POST) parameters
@@ -17,8 +17,16 @@ app.use(flash());
 //require('./app/routes')(app); // pass our application into our routes
 
 // start app ===============================================
-var server = app.listen(process.env.PORT || 8080, "0.0.0.0", function () {
+var server = app.listen(process.env.PORT || 8080, "0.0.0.0", function ()
+{
     console.log('Server listening at http://' + server.address().address + ':' + server.address().port);
 });
+//
+// //See if we can do a GET request from here.
+// var options = {
+//     response_type: 'code',
+//     path: '/index.html'
+// };
+// http.get();
 
 exports = module.exports = app; // expose app
