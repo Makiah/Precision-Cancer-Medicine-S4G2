@@ -1,0 +1,26 @@
+html,
+body {
+    width: 100%;
+    height: 100%;
+    margin: 0;
+    font-family:"Helvetica Neue","Helvetica","Arial","Verdana","sans-serif";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+}
+
+body{
+    display: -webkit-box;
+    display: -moz-box;
+    display: -ms-flexbox;
+    display: -webkit-flex;
+    display: flex;
+    flex-flow: column;
+    height: 100%;
+    width:100%;
+}
+
+
+div#main, div#maincontent{
+    width:100%;
+    height:100%; 
+}

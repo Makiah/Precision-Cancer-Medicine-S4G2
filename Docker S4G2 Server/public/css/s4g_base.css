@@ -1,0 +1,11 @@
+a {
+  color:inherit; /* blue colors for links too */
+  text-decoration: inherit; /* no underline */
+}
+
+.btn-login{
+  border: 0;
+  background-color: rgba(63, 63, 63, 0.3);
+  color: #000;
+  font-weight: bold;
+}

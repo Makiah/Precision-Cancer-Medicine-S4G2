@@ -1,0 +1,14 @@
+{
+    "scopes":[
+        {
+            "role": "user",
+            "resource": "*",
+            "operation": "*"
+        },
+        {
+            "role": "patient",
+            "resource": "*",
+            "operation": "*"
+        }
+    ]
+}
