@@ -1,85 +1,284 @@
 <!DOCTYPE html>
-<html>
-  <head>
-    <script src="https://rawgithub.com/smart-on-fhir/client-js/master/dist/fhir-client.js"></script>
-    <link rel="shortcut icon" href="">
-  </head>
-  <body>
-    <h1><span id="name"></span>, <span id="gender"></span> (MRN: <span id="mrn"></span>)</h1>
-    <ul id="condition-list"></ul>
-    <script type="text/javascript">
+<!--(Copied from https://www.w3schools.com/css/css_navbar.asp) -->
+<!--(Login taken from https://www.w3schools.com/howto/tryit.asp?filename=tryhow_css_login_form_modal)-->
+<!-- Text styling from hongkiat.com -->
 
-        function getPatientName (pt) {
-            if (pt.name) {
-                var names = pt.name.map(function(name) {
-                    return name.given.join(" ") + " " + name.family.join(" ");
-                });
-                return names.join(" / ")
-            } else {
-                return "Anonymous";
+<html>
+<head>
+    <title>PCM Web App</title>
+    <style>
+        body {margin:0;}
+
+        /* The styling for the heading (which is a ul element) */
+        #heading {
+            list-style-type: none;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+            background-color: #333;
+            position: fixed;
+            top: 0;
+            width: 100%;
+        }
+
+        .headingItem {
+            float: right;
+        }
+
+        .headingItem a {
+            display: block;
+            color: white;
+            text-align: center;
+            padding: 14px 16px;
+            text-decoration: none;
+        }
+
+        .headingItem a:hover:not(.active) {
+            background-color: #111;
+        }
+
+        .active {
+            background-color: #4CAF50;
+        }
+
+
+        /* Full-width input fields */
+        input[type=text], input[type=password] {
+            width: 100%;
+            padding: 12px 20px;
+            margin: 8px 0;
+            display: inline-block;
+            border: 1px solid #ccc;
+            box-sizing: border-box;
+        }
+
+        /* Set a style for all buttons */
+        button {
+            background-color: #4CAF50;
+            color: white;
+            padding: 14px 20px;
+            margin: 8px 0;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+        }
+
+        button:hover {
+            opacity: 0.8;
+        }
+
+        /* Extra styles for the cancel button */
+        .cancelbtn {
+            width: auto;
+            padding: 10px 18px;
+            background-color: #f44336;
+        }
+
+        /* Center the image and position the close button */
+        .imgcontainer {
+            text-align: center;
+            margin: 24px 0 12px 0;
+            position: relative;
+        }
+
+        img.avatar {
+            width: 40%;
+            border-radius: 00%;
+        }
+
+        .container {
+            padding: 16px;
+        }
+
+        span.psw {
+            float: right;
+            padding-top: 16px;
+        }
+
+        /* The Modal (background) */
+        .modal {
+            display: none; /* Hidden by default */
+            position: fixed; /* Stay in place */
+            z-index: 1; /* Sit on top */
+            left: 0;
+            top: 0;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
+            overflow: auto; /* Enable scroll if needed */
+            background-color: rgb(0,0,0); /* Fallback color */
+            background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+            padding-top: 60px;
+        }
+
+        /* Modal Content/Box */
+        .modal-content {
+            background-color: #fefefe;
+            margin: 5% auto 15% auto; /* 5% from the top, 15% from the bottom and centered */
+            border: 1px solid #888;
+            width: 80%; /* Could be more or less, depending on screen size */
+        }
+
+        /* The Close Button (x) */
+        .close {
+            position: absolute;
+            right: 25px;
+            top: 0;
+            color: #000;
+            font-size: 35px;
+            font-weight: bold;
+        }
+
+        .close:hover,
+        .close:focus {
+            color: red;
+            cursor: pointer;
+        }
+
+        /* Add Zoom Animation */
+        .animate {
+            -webkit-animation: animatezoom 0.6s;
+            animation: animatezoom 0.6s
+        }
+
+        @-webkit-keyframes animatezoom {
+            from {-webkit-transform: scale(0)}
+            to {-webkit-transform: scale(1)}
+        }
+
+        @keyframes animatezoom {
+            from {transform: scale(0)}
+            to {transform: scale(1)}
+        }
+
+        /* Change styles for span and cancel button on extra small screens */
+        @media screen and (max-width: 300px) {
+            span.psw {
+                display: block;
+                float: none;
+            }
+            .cancelbtn {
+                width: 100%;
             }
         }
 
-        function getPatientGender (pt) {
-        	if(pt.gender){
-        		var gender = pt.gender;
-        		return (gender.charAt(0).toUpperCase() + gender.slice(1));
-        	}
-        	else {
-        		return "Unknown";
-        	}
+        /* Effectively centers a given div cross-platform */
+        .outer {
+            display: table;
+            position: absolute;
+            height: 100%;
+            width: 100%;
+            z-index: -1;
         }
 
-        function setPatientMRN (pt) {
-        	if(pt.identifier) {
-        		
-        		pt.identifier.forEach(function(id) {
-        			id.type.coding.forEach(function(coding) {
-        				if(coding.code == "MR"){
-        					console.log(id.value);
-        					document.getElementById('mrn').innerHTML = id.value;
-        				} 
-        			});
-        		});
-        	}
+        .middle {
+            display: table-cell;
+            vertical-align: middle;
+            z-index: -1;
         }
 
-        function displayPatient (pt) {
-            document.getElementById('name').innerHTML = getPatientName(pt);
-            document.getElementById('gender').innerHTML = getPatientGender(pt);
-            document.getElementById('mrn').innerHTML = "Unknown"; //Default to Unknown, then call setPatientMRN. Different from other information because of searching required.
-            setPatientMRN(pt);
+        .inner {
+            margin-left: auto;
+            margin-right: auto;
+            z-index: -1;
         }
 
-        var conditionList = document.getElementById('condition-list');
-
-        function displayPatientCondition (conditionText) {
-        	conditionList.innerHTML += "<li> " + conditionText + "</li>";
+        body {
+            background-image: url("assets/AIDoctor.jpg");
+            background-size: auto;
+            background-repeat: no-repeat;
         }
 
-        FHIR.oauth2.ready(function(smart){
-        	console.log(smart);
 
-        	var encodedOpenID = smart.tokenResponse.id_token;
+        /* Gives a cool text effect found at hongkiat */
+        .shadowStyling {
+            color: white;
+            font-size: 4em;
+            font-weight: bold;
+            font-family: Helvetica;
+            text-shadow: 0 1px 0 #ccc, 0 2px 0 #c9c9c9, 0 3px 0 #bbb, 0 4px 0 #b9b9b9, 0 5px 0 #aaa, 0 6px 1px rgba(0,0,0,.1), 0 0 5px rgba(0,0,0,.1), 0 1px 3px rgba(0,0,0,.3), 0 3px 5px rgba(0,0,0,.2), 0 5px 10px rgba(0,0,0,.25), 0 10px 10px rgba(0,0,0,.2), 0 20px 20px rgba(0,0,0,.15);
+            text-align: center;
+            z-index: -1;
+        }
 
-            smart.patient.read().then(function(pt) {
-            	console.log(pt);
-                displayPatient(pt);
-                
+    </style>
+</head>
+<body>
 
-                smart.api.fetchAll({type: "Condition", query: {patient: {id: pt.id}}}).then(function(results, refs) {
-                	console.log(results);
-                	results.forEach(function(condition){
-                		displayPatientCondition(condition.code.text);
-                	});
-            	});
+<!-- The heading for the application (modified with CSS to look like a title bar) -->
+<ul id="heading">
+    <li class="headingItem"><a class="active" onclick="document.getElementById('loginPanel').style.display='block'" style="width:auto;">Login</a></li>
+    <li class="headingItem"><a href="#support">Support</a></li>
+    <li class="headingItem"><a href="#contact">About</a></li>
+</ul>
 
-            	smart.api.search({type: "Condition"}).then(function(results, refs) {
-                	console.log(results);
-            	});
+<!-- The popout login panel that shows up when you click the login part of the title bar -->
+<div id="loginPanel" class="modal">
+    <form class="modal-content animate">
+        <div class="imgcontainer">
+            <span onclick="document.getElementById('loginPanel').style.display='none'" class="close" title="Close Modal">&times;</span>
+            <img src="assets/SMARTIcon.svg" alt="Avatar" class="avatar">
+        </div>
 
-            });
-        });
-    </script>
-  </body>
+        <div class="container">
+            <label><b>Username</b></label>
+            <input type="text" placeholder="Enter Username" name="uname" required>
+
+            <label><b>Password</b></label>
+            <input type="password" placeholder="Enter Password" name="psw" required>
+
+            <button type="submit">Login</button>
+            <input type="checkbox" checked="checked"> Remember me
+        </div>
+
+        <div class="container" style="background-color:#f1f1f1">
+            <button type="button" onclick="document.getElementById('loginPanel').style.display='none'" class="cancelbtn">Cancel</button>
+            <span class="psw">Forgot <a href="#">password?</a></span>
+        </div>
+    </form>
+</div>
+
+<!-- The Title for the App -->
+<div class="outer">
+    <div class="middle">
+        <div class="inner">
+
+            <p class="shadowStyling">Precision Cancer Medicine</p>
+            <p class="shadowStyling">A SMART on FHIR Web Application</p>
+
+        </div>
+    </div>
+</div>
+
+<!-- This script makes it so clicking outside of the open login panel makes it close. -->
+<script>
+    // Get the modal
+    var modal = document.getElementById('loginPanel');
+
+    // When the user clicks anywhere outside of the modal, close it
+    window.onclick = function(event) {
+        if (event.target == modal) {
+            modal.style.display = "none";
+        }
+    }
+</script>
+
+<!-- The script which actually enables you to use the FHIR client libraries.-->
+<script src="https://rawgithub.com/smart-on-fhir/client-js/master/dist/fhir-client.js"></script>
+
+<!-- The script which actually authorizes the libraries -->
+<!--
+<script>
+    //The app parameters.
+    var clientID = "";
+    var redirectURI = "http://0.0.0.0:8080/index.html";
+
+    //Actually authorizing based on the provided client id and redirect URI.
+    FHIR.oauth2.authorize({
+        "client_id": clientID,
+        "redirect_uri": redirectURI,
+        "scope": "user/*.*"
+    });
+</script>
+-->
+</body>
 </html>
