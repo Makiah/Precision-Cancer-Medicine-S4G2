@@ -201,6 +201,7 @@
         }
 
     </style>
+    <script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.2/jquery.min.js"></script>
 </head>
 <body>
 
@@ -226,7 +227,7 @@
             <label><b>Password</b></label>
             <input type="password" placeholder="Enter Password" name="psw" required>
 
-            <button type="submit">Login</button>
+            <button type="submit" onclick="beginAuthenticationSequence()">Login</button>
             <input type="checkbox" checked="checked"> Remember me
         </div>
 
@@ -261,6 +262,9 @@
         }
     }
 </script>
+
+<!-- This script will do the authentication thing -->
+<script src="serverauthentication.js"></script>
 
 </body>
 </html>

@@ -10,6 +10,7 @@
   "dependencies": {
     "body-parser": "~1.4.2",
     "express": "~4.5.1",
-    "flash": "^1.1.0"
+    "flash": "^1.1.0",
+    "request": "^2.80.0"
   }
 }
