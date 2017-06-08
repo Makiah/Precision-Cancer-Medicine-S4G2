@@ -11,8 +11,8 @@ function beginAuthenticationSequence()
         //The data required.
         {
             response_type: 'code',
-            client_id: '93e64628-92a0-43b9-9bca-bdefd55590a2', //Replace this when running it.
-            redirect_uri: 'http://127.0.0.1:63342/Custom%20Application/public/index.html', //I'm not sure whether this is actually the right callback, but I'll have to test to see.
+            client_id: '87066c7e-f9b9-47c8-be72-0e8bd2fc23cf', //Replace this when running it.
+            redirect_uri: 'https://www.getpostman.com/oauth2/callback', //I'm not sure whether this is actually the right callback, but I'll have to test to see.
             scope: 'user/*.*',
             state: 'randomstringwedontcareabout'  //Can be literally anything (not sure what it's used for)
         },
@@ -21,14 +21,14 @@ function beginAuthenticationSequence()
         function (data, status)
         {
             //Make sure that the request was successful.
-            if (status.statusCode == 200)
+            if (status == "success")
             {
                 //Output to the user that the request for the token was successful!
                 console.log("YAS the request was successful!");
             }
             else
                 //Output to the user that the request failed :(
-                console.log("Oh noes!  The request failed!");
+                console.log("Oh noes2!  The request failed!");
         }
     );
 }
