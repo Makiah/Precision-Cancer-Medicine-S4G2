@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 
 let models = require('../models');
 let User = models.User;
@@ -9,36 +9,61 @@ var uuid = require('node-uuid');
 let userAction = require('./userAction');
 let scopeAction = require('./scopeAction');
 
-var app_verify = function(client_id, redirect_uri, scopes){
-    console.log(scopes);
-    var scope_list = scopes.split(/\+/);
-    console.log(scope_list);
-    console.log('app verifying');
-    var app_obj = AppDao.findOne({
-        client_id:client_id
-    });
-    if ( app_obj && app_obj.redirect_uri == redirect_uri && scope_compare(scope_list, app_obj)){
-        return true;
-    }else{
+/**
+ * This method verifies a given app, and outputs on the terminal console whether or not the app was verified successfully in addition to what exactly went wrong.
+ *
+ * @param client_id: the client ID for the previously registered application.
+ * @param redirect_uri: the URL to redirect to after successfully verifying the application, with the code and state param.
+ * @param scopes: the scope in which the application is working.
+ * @returns {*}: a boolean which indicates whether or not the app was verified.
+ * @author: Written by Dr. Alterovitz's group, edited by Makiah.
+ */
+let appIsValid = function(client_id, redirect_uri, scopes)
+{
+    //Make sure that a client ID was provided.
+    if (client_id === null)
+    {
+        console.log("No client ID was provided!  Cannot verify application :(");
         return false;
     }
-}
+
+    //Make sure that a client ID was provided.
+    if (redirect_uri === null)
+    {
+        console.log("No redirect URI was provided!  Cannot verify application :(");
+        return false;
+    }
+
+    //Make sure that a client ID was provided.
+    if (scopes === null)
+    {
+        console.log("No scope(s) were provided!  Cannot verify application :(");
+        return false;
+    }
+
+    //Attempt to verify the application.
+    let scope_list = scopes.split(/\+/);
+    let app_obj = AppDao.findOne({
+        client_id:client_id
+    });
+
+    //Return whether this application was successfully found!
+    let successfullyVerified = app_obj && app_obj.redirect_uri === redirect_uri && scope_compare(scope_list, app_obj);
+    console.log(successfullyVerified ? "Application successfully verified :)" : "Application could not be verified :(");
+    return successfullyVerified;
+};
 
 var app_verify_scope = function(client_id, scopes){
-    var scope_list = scopes.split(/\+/);
-    console.log(scope_list);
-    console.log('app verifying');
+    let scope_list = scopes.split(/\+/);
+    console.log('Verifying Application...');
     console.log(client_id);
-    var app_obj = AppDao.findOne({
+    let app_obj = AppDao.findOne({
         client_id:client_id
     });
     console.log(app_obj);
-    if ( app_obj && scope_compare(scope_list, app_obj)){
-        return true;
-    }else{
-        return false;
-    }
-}
+
+    return app_obj && scope_compare(scope_list, app_obj);
+};
 
 var scope_compare = function(scopes, app_obj){
     var app_scopes = scopeAction.oarray2sarray(app_obj.scopes);
@@ -53,7 +78,7 @@ var scope_compare = function(scopes, app_obj){
         }
     }
     return true;
-}
+};
 
 var app_info_validate = function(app_info){
     var is_valid = true;
@@ -65,9 +90,10 @@ var app_info_validate = function(app_info){
     }
     console.log(is_valid);
     return is_valid;
-}
+};
 
-var app_register = function(app_info, username){
+var app_register = function(app_info, username)
+{
     var user_obj = userAction.get_user_obj(username);
     console.log(user_obj.toObject({}));
     if( !app_info_validate(app_info) || !user_obj ){
@@ -77,7 +103,7 @@ var app_register = function(app_info, username){
     console.log('client_id: '+client_id);
     var scope_objs = scopeAction.sarray2oarray(app_info.scopes);
     if( !scope_objs ){
-        console.log('scope error')
+        console.log('scope error');
         return null;
     }
     var new_app = new App({
@@ -92,7 +118,7 @@ var app_register = function(app_info, username){
     });
     AppDao.create(new_app);
     return client_id;
-}
+};
 
 var update_app = function(client_id, app_info, username){
     var res = {
@@ -119,9 +145,10 @@ var update_app = function(client_id, app_info, username){
     res.isSuccessful = true;
     return res;
 
-}
+};
 
-var get_app_info = function(client_id){
+var get_app_info = function(client_id)
+{
     var app_obj = AppDao.findOne({client_id:client_id});
     if( !app_obj ){
         return null;
@@ -129,22 +156,23 @@ var get_app_info = function(client_id){
     var app_info = app_obj.toObject({recursive:true});
     app_info.scopes = scopeAction.oarray2sarray(app_info.scopes);
     return app_info;
-}
+};
 
-var get_app_info_by_id = function(app_id){
+var get_app_info_by_id = function(app_id)
+{
     var app_obj = AppDao.findOne({id:app_id});
     if( !app_obj ){
         return null;
     }
     return app_obj.toObject({recursive:true});
-}
+};
 
 module.exports = {
     app_info_validate,
     app_register,
-    app_verify,
+    appIsValid,
     get_app_info,
     get_app_info_by_id,
     app_verify_scope,
     update_app
-}
+};

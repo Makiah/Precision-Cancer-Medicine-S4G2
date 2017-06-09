@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Callback</title>
+</head>
+<body>
+<p>Callback Page</p>
+</body>
+
+<!-- These scripts are what return the callback to the serverauthentication script.  -->
+<script src="serverauthentication.js"></script>
+<script>
+
+    console.log("Got callback");
+
+    //A script I found on StackOverflow to obtain a URL parameter.
+    var getUrlParameter = function getUrlParameter(sParam) {
+        var sPageURL = decodeURIComponent(window.location.search.substring(1)),
+            sURLVariables = sPageURL.split('&'),
+            sParameterName,
+            i;
+
+        for (i = 0; i < sURLVariables.length; i++) {
+            sParameterName = sURLVariables[i].split('=');
+
+            if (sParameterName[0] === sParam) {
+                return sParameterName[1] === undefined ? true : sParameterName[1];
+            }
+        }
+    };
+
+    //Try to get the authentication token and then pass it back to the server authentication script.  
+    var authenticationCode = getUrlParameter('code');
+    if (authenticationCode !== null && authenticationCode !== "")
+    {
+        console.log("Authentication code is " + authenticationCode);
+        askForAuthenticationToken(authenticationCode);
+    }
+    else
+    {
+        console.log("Couldn't find code param!");
+    }
+</script>
+</html>

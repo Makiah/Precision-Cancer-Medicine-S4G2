@@ -1,4 +1,4 @@
-'use strict'
+'use strict';
 let config = require('../configs');
 
 let um = require('unique-model');
@@ -45,7 +45,7 @@ let App = um.model.createModel('App', {
 
 let UserDao = session.getDao(User);
 let AppDao = session.getDao(App);
-let ScopeDao = session.getDao(Scope)
+let ScopeDao = session.getDao(Scope);
 
 module.exports = {
     User,
@@ -54,4 +54,4 @@ module.exports = {
     AppDao,
     Scope,
     ScopeDao
-}
+};
